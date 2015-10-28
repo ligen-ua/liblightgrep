@@ -46,27 +46,44 @@
 
 <h2>Simple Example in Python</h2>
 
+<p>First, let's create some sample text to search (this isn't part of Lightgrep):</p>
 <pre>
-text = " These aren't the droids you're looking for."
-data = text.encode ('utf-8')
+text = "These aren't the droids you're looking for."
+data = text.encode('utf-8')
+</pre>
 
+<p>Now define the patterns, or keywords, to search for. A keyword contains a regular expression,
+list of encodings, and keyword options. Available keyword options are "fixedString" and "caseInsensitive". 
+The default value for both options is False, meaning if you do not specify them, the search for that 
+keyword will be GREP and case sensitive.</p>
+<pre>
 pats = (
-    ('droids ', ['UTF-8', 'UTF-16LE'], KeyOpts(caseInsensitive = True)),
-    ('a.*?t', ['ASCII'], KeyOpts ())
+    ('droids', ['UTF-8', 'UTF-16LE'], KeyOpts(caseInsensitive = True)),
+    ('a.*?t', ['ASCII'], KeyOpts())
 )
+</pre>
 
+<p>Create an accumulator that will store all hits as they are generated:</p>
+<pre>
 accum = HitAccumulator()
+</pre>
 
+<p>Search the data with the previously defined patterns:</p>
+<pre>
 with Lightgrep(pats, accum.lgCallback) as lg:
     hitcount = lg.searchBuffer(data, accum)
+</pre>
 
+<p>Iterate the list of hits:</p>
+<pre>
 for h in accum.Hits:
     print('hit on {} in {} at [{} ,{}): "{}"'.format(
         h['pattern'], h['encChain'], h['start'], h['end'],
         data [h['start']:h['end']].decode('utf-8')
     ))
 </pre>
-Output:
+
+<p>Run the script to see the output:</p>
 <pre>
 $ ./ex.py
 hit on a.*?t in ASCII at [6 ,12): "aren't"
@@ -80,10 +97,10 @@ Not in the simple example.</p>
 
 <pre>
 text = "These aren't the droids you're looking for."
-data = text . encode ('utf-8')
+data = text.encode('utf-8')
 pats = (
-    ('droids', ['UTF-8', 'UTF-16LE'], KeyOpts ( caseInsensitive = True )),
-    ('a.*?t', ['ASCII'], KeyOpts ())
+    ('droids', ['UTF-8', 'UTF-16LE'], KeyOpts(caseInsensitive = True)),
+    ('a.*?t', ['ASCII'], KeyOpts())
 )
 accum = HitAccumulator()
 with Lightgrep(pats, accum.lgCallback) as lg:
