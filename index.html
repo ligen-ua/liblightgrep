@@ -139,9 +139,10 @@
 
 <h3>
 <a id="python-api" class="anchor" href="#python-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Python API</h3>
-<p>The Lightgrep Python bindings are designed to work in Python 2.7+ and 3.4+ 
+<p>Lightgrep can be used from within Python scripts by importing the <code>pylightgrep</code> module located in the main lightgrep
+source tree. The Lightgrep Python bindings are designed to work in Python 2.7+ and 3.4+ 
 in both 32-bit and 64-bit versions. The liblightgrep.dll and support DLL architectures must, however, 
-match the Python architecture otherwise an error will be generated. The Python bindings use the <code>ctypes</code> module to
+match the Python architecture otherwise an error will be generated. The Python bindings use the <a href="https://docs.python.org/2/library/ctypes.html">ctypes</a> module to
 import liblightgrep and call into it via the C API.</p>
 <p>
   The Python API is <a href="python.html">documented in more depth here</a>.
