@@ -98,36 +98,45 @@ hit on droids in UTF-8 at [17 ,23): "droids"
 <pre>
 text = "These aren't the droids you're looking for."
 data = text.encode('utf-8')
+
 pats = (
     ('droids', ['UTF-8', 'UTF-16LE'], KeyOpts(caseInsensitive = True)),
     ('a.*?t', ['ASCII'], KeyOpts())
 )
 accum = HitAccumulator()
-with Lightgrep(pats, accum.lgCallback) as lg:
-    hitcount = lg.searchBuffer(data, accum)
+</pre>
 
-for h in accum.Hits:
-    print ('hit on {} in {} at [{} ,{}): "{}" '.format (
-        h['pattern'], h['encChain'], h['start'], h['end'],
-        data [h['start']:h['end']].decode ('utf-8')
-    ))
-
+<p>Everything is the same up to this point. Next, though, we can manually create 
+the program, pattern map, and search context:</p>
+<pre>
 prog, pmap = Lightgrep.createProgram(pats)
 lg = Lightgrep()
 accum = HitAccumulator()
 lg.createContext(prog, pmap, accum.lgCallback)
+</pre>
 
+<p>We still call searchBuffer() and iterate the hits in the accumulator:</p>
+<pre>
 hitcount = lg.searchBuffer(data, accum)
 for h in accum.Hits:
     # do stuff with hits
+</pre>
 
+<p>After we're done, we can reset the accumulator and Lightgrep:</p>
+<pre>
 accum.reset()
 lg.reset()
+</pre>
 
+<p>Now we can search another data stream without having to reinitialize everything:</p>
+<pre>
 hitcount = lg.searchBuffer(otherdata, accum)
 for h in accum.Hits :
     # do stuff with other hits
+</pre>
 
+<p>Finally, close the Lightgrep object:</p>
+<pre>
 lg.close()
 </pre>
 
