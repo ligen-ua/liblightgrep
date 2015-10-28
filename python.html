@@ -55,7 +55,9 @@ for h in accum.Hits:
         h['pattern'], h['encChain'], h['start'], h['end'],
         data [h['start']:h['end']].decode('utf-8')
     ))
-
+</pre>
+Output:
+<pre>
 $ ./ex.py
 hit on a.*?t in ASCII at [6 ,12): "aren't"
 hit on droids in UTF-8 at [17 ,23): "droids"
@@ -101,9 +103,8 @@ lg.close()
 </pre>
 
 
-<p>Use Lightgrep in the language you want!*
-
-*As long as the language you want is C, C++, or Python (or you can write your own bindings).</p>
+<p>Use Lightgrep in the language you want!*</p>
+<p>*As long as the language you want is C, C++, or Python (or you can write your own bindings).</p>
 
 
       </section>
