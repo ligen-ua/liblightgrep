@@ -189,8 +189,21 @@ download the <a href="resources/LightgrepSyntaxCheatSheet.pdf">Lightgrep Syntax 
 <h2>
 <a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation</h2>
 
+<p>
+  We've published a couple of papers about Lightgrep's implementation. They'll be here shortly
+</p>
+
 <h2>
-<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance</h2>
+<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance
+</h2>
+
+<p>
+  Lightgrep is not the fastest single-pattern engine. However, its performance degrades gracefully as patterns are added and it
+  can support very large numbers of patterns. It is generally faster to search a stream of data once with lightgrep than to search
+  it once for each pattern with a single-pattern engine.
+</p>
+
+
       </section>
     </div>
     <footer>
