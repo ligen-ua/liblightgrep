@@ -83,6 +83,35 @@
 
 <h2>
 <a id="syntax" class="anchor" href="#syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Syntax</h2>
+<table>
+  <tr><td>\xhh</td><td>A single Unicode code point</td></tr>
+  <tr><td>\zhh</td><td>A single hex byte, regardless of encoding</td></tr>
+  <tr><td>\w</td><td>Match a "word" character [0-9A-Za-z_]</td></tr>
+  <tr><td>\W</td><td>Match a non-"word" character [^0-9A-Za-z_]</td></tr>
+  <tr><td>\s</td><td>Match a whitespace character [\t\n\f\r ]</td></tr>
+  <tr><td>\S</td><td>Match a non-whitespace character [^\t\n\f\r ]</td></tr>
+  <tr><td>\d</td><td>Match a decimal digit [0-9]</td></tr>
+  <tr><td>\D</td><td>Match a non-digit character [^0-9]</td></tr>
+  <tr><td>\.</td><td>Literal character (.)</td></tr>
+  <tr><td>.</td><td>Any character</td></tr>
+  <tr><td>*</td><td>Match 0 or more times</td></tr>
+  <tr><td>+</td><td>Match 1 or more times</td></tr>
+  <tr><td>?</td><td>Match 1 or 0 times</td></tr>
+  <tr><td>{n}</td><td>Match exactly n times</td></tr>
+  <tr><td>{n,}</td><td>Match at least n times</td></tr>
+  <tr><td>{n,m}</td><td>Match at least n but not more than m times</td></tr>
+  <tr><td>[a-z]</td><td>a through z</td></tr>
+  <tr><td>[xyz]</td><td>Either x, y, or z</td></tr>
+  <tr><td>[^xyz]</td><td>Not x, y, or z</td></tr>
+  <tr><td>(ab)</td><td>Group ab together for ?, +, *, |</td></tr>
+  <tr><td>a|b</td><td>Either a or b</td></tr>
+  <tr><td colspan=2>------ Unicode Operations ------</td></tr>
+  <tr><td>\x{hhhhhh}</td><td>A single Unicode code point</td></tr>
+  <tr><td>\N{U+hhhhhh}</td><td>A single Unicode code point</td></tr>
+  <tr><td>\N{name}</td><td></td><td>A single Unicode code point with the given name</td></tr>
+  <tr><td>\p{property}</td><td>\p{Script=Cyrillic} matches any Cyrillic code point</td></tr>
+  <tr><td>\P{property}</td><td>Equivalent to [^\p{property}]</td></tr>
+</table>
 
 <h2>
 <a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation</h2>
