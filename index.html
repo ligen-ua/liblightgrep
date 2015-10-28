@@ -78,6 +78,65 @@
 <h3>
 <a id="c-api" class="anchor" href="#c-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>C API</h3>
 
+<p>
+  Lightgrep is implemented in C++ but exposes a small C API which is considered the public interface.
+</p>
+<ul>./include/lightgrep/ contains the C API headers:
+  <li><a href="https://github.com/strozfriedberg/liblightgrep/blob/master/include/lightgrep/api.h">aph.h</a>&mdash;the primary search API</li>
+  <li><a href="https://github.com/strozfriedberg/liblightgrep/blob/master/include/lightgrep/search_hit.h">search_hit.h</a>&mdash;defines the SearchHit struct and the search hit function callback signature</li>
+  <li><a href="https://github.com/strozfriedberg/liblightgrep/blob/master/include/lightgrep/util.h">util.h</a>&mdash;functions for reading context around hits and safely transcoding to UTF-8</li>
+  <li><a href="https://github.com/strozfriedberg/liblightgrep/blob/master/include/lightgrep/encodings.h">encodings.h</a>&mdash;names, aliases, and integer codes for all encodings lightgrep supports</li>
+  <li><a href="https://github.com/strozfriedberg/liblightgrep/blob/master/include/lightgrep/transforms.h">transforms.h</a>&mdash;character and byte transformations that lightgrep supports</li>
+</ul>
+
+<p>
+  In general, one must first create a few opaque objects: </code>LG_HFSM, LG_HPATTERNMAP, LG_HPATTERN</code>.
+  Given a UTF-8 string of the pattern, <code>lg_parse_pattern()</code> validates the syntax of the pattern and populates the 
+  <code>LG_HPATTERN</code> with the abstract syntax tree representation of the pattern. This is then added to the finite state 
+  machine and the pattern map with <code>lg_add_pattern()</code>. <code>lg_add_pattern()</code> takes a single encoding chain 
+  string which is the encoding of the pattern that one wants to search for. The same pattern can be added multiple times with
+  different encoding chains, ensuring that lightgrep matches on the pattern in differently encoded raw data.
+</p>
+<p>
+  Once all of the patterns have been added to the finite state machine and the pattern map, then the finite state machine must be
+  transformed into a form that's amenable for searching. This is done with <code>lg_create_program()</code>, which takes the
+  <code>LG_HFSM</code> and returns a new <code>LG_HPROGRAM</code>. The program is an opaque representation of the logic necessary
+  to match against all of the patterns in all of their respective encodings. <code>lg_create_program()</code> is similar in 
+  concept to the traditional REGCOMP function and it should generally only be called once and then reused with different search
+  streams; if not, you'll find that lightgrep is glacially slow.
+</p>
+<p>
+  After the program has been created, one can free memory by calling <code>lg_destroy_fsm()</code>. In contrast, the pattern map
+  should be retained. Next, create a search context object with <code>lg_create_context()</code>. Creating a context is not as 
+  heavyweight as <code>lg_create_program()</code> but one should generally reuse a context rather than creating a new one. With a
+  context, begin searching data with <code>lg_search()</code>, which takes a buffer of data, a logical offset to associate with
+  the beginning of the buffer, a callback function for receiving hits, and a <code>void*</code> value of one's choice which will
+  be passed through the to the callback when hits are discovered. <code>lg_search()</code> can be invoked repeatedly on separate
+  buffers and it will treat them as a stream, automatically handling hits that cross boundaries. Lightgrep does not retain the 
+  buffers and searching will not, with average pattern sets, allocate much memory. However, problematic patterns can cause great
+  increases in memory usage; more on this later.
+</p>
+<p>
+  Once a stream has been searched, it is <i>essential</i> to call <code>lg_closeout_search()</code>. This tells Lightgrep that 
+  no more data will be received on the stream and if there are any buffered hits, they will be flushed to the callback. 
+  <code>lg_reset_context()</code> should then be called to begin searching new streams. Once searching completes, call the 
+  <code>destroy_</code> functions on the pattern map, the program, and the contexts.
+</p>
+<p>
+  The pattern map is nothing more than a lookup table that can be indexed into by <code>SearchHit.KeywordIndex</code> and will 
+  return a pointer to an <code>LH_PatternInfo</code> struct. This struct contains the pattern as its original UTF-8 string and a
+  string representing the encoding chain <i>of the hit</i>. <code>LG_PatternInfo</code> also has a <code>void*</code> pointer
+  which one can set to associate custom data. This can be used to funnel hits on different patterns to different handlers.
+</p>
+<p>
+  Lightgrep is thread agnostic. It performs no locking itself and in general is not thread safe. However, all API calls are
+  re-entrant. Additionally, once all patterns have been added, the program and pattern map are immutable. They can therefore be
+  shared safely between different threads. A typical threading scenario would be to have a pool of threads to handle searching
+  different streams, with each thread having its own <code>LG_HCONTEXT</code> and sharing the pattern map and program. It is not
+  really possible to use multithreading to parallelize searching of a single stream.
+</p>
+
+
 <h3>
 <a id="python-api" class="anchor" href="#python-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>Python API</h3>
 <p>The Lightgrep Python bindings are designed to work in Python 2.7+ and 3.4+ 
