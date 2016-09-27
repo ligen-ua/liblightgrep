@@ -140,8 +140,8 @@ SCOPE_TEST(makeJumpTableRange) {
   SCOPE_ASSERT_EQUAL(JUMP_TABLE_RANGE_OP, i.OpCode);
   SCOPE_ASSERT_EQUAL(1u, i.wordSize());
   SCOPE_ASSERT_EQUAL(33u, i.Op.T2.First);
-  SCOPE_ASSERT_EQUAL(45u, i.Op.T2.Last);
-  SCOPE_ASSERT_EQUAL("JmpTblRange 0x21/'!'-0x2d/'-'", i.toString());
+  SCOPE_ASSERT_EQUAL(13u, i.Op.T2.Last);
+  SCOPE_ASSERT_EQUAL("JmpTblRange 0x21/'!'-0x0d/'\r'", i.toString());
   SCOPE_EXPECT(Instruction::makeJumpTableRange(1, 0), std::range_error);
 }
 

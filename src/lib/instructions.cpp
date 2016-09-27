@@ -152,8 +152,14 @@ Instruction Instruction::makeJump(Instruction* ptr, uint32_t offset) {
 }
 
 Instruction Instruction::makeJumpTableRange(byte first, byte last) {
-  Instruction i = makeRange(first, last);
+  if (last < first) {
+    THROW_WITH_OUTPUT(std::range_error, "out-of-order range; first = " << first << "; last = " << last);
+  }
+  Instruction i;
   i.OpCode = JUMP_TABLE_RANGE_OP;
+  i.Op.T2.First = first;
+  i.Op.T2.Last = last - first + 1;
+  i.Op.T2.Flags = 0;
   return i;
 }
 
