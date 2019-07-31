@@ -2,8 +2,6 @@
 
 . jenkins-setup/build_config.sh
 
-unpack_deps
-
 ./bootstrap.sh
 
 CHECK_TARGET=check-valgrind
@@ -17,6 +15,3 @@ if [ $Target = 'linux' -a $Linkage = 'shared' ]; then
   ln -fsr $INSTALL/lib/liblightgrep.so.0.0.0 $INSTALL/lib/liblightgrep.so.0
   ln -fsr $INSTALL/lib/liblightgrep.so.0.0.0 $INSTALL/lib/liblightgrep.so.0.0
 fi
-
-gather_deps
-archive_it_ex
