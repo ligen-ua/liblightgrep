@@ -6,7 +6,7 @@ AM_CPPFLAGS = -I$(srcdir)/include $(BOOST_CPPFLAGS) $(ICU_CPPFLAGS) $(LG_CPPFLAG
 AM_CFLAGS = $(LG_CFLAGS)
 AM_CXXFLAGS = $(LG_CXXFLAGS) $(ASAN_CXXFLAGS)
 AM_LDFLAGS = $(BOOST_LDFLAGS) $(ICU_LDFLAGS) $(LG_LDFLAGS) $(ASAN_LDFLAGS)
-AM_YFLAGS = -r solved
+AM_YFLAGS =
 
 LG_LIB = src/lib/liblightgrep.la
 LG_LIB_INT = src/lib/liblightgrepint.la
